@@ -24,7 +24,23 @@ const capitalized = string => string[0].toUpperCase() + string.slice(1).toLowerC
 
 app.locals.title = `${capitalized(projectName)}- Generated with Ironlauncher`;
 
+app.use(
+    session({
+      secret: 'PizzaBytes',
+      resave: true,
+      saveUninitialized: true,
+      cookie: {
+        maxAge: 30 * 24 * 60 * 60 * 1000
+      },
+      store: MongoStore.create({
+        mongoUrl: 'mongodb://localhost/auth-demo'
+      })
+    })
+  );
+
 // 👇 Start handling routes here
+app.use('/site', siteRouter);
+app.use("/auth", authRouter);
 const index = require('./routes/index');
 app.use('/', index);
 
